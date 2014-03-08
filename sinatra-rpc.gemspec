@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Andrea Bernardo Ciddio"]
   spec.email         = ["bcandrea@gmail.com"]
   spec.description   = %q{A Sinatra module providing RPC server functionality}
-  spec.summary       = %q{This module provides a base class for Sinatra middleware serving RPC endpoints.}
-  spec.homepage      = ""
+  spec.summary       = %q{This module provides Sinatra extension that can be used to build RPC endpoints.}
+  spec.homepage      = "https://github.com/bcandrea/sinatra-rpc"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -24,4 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "yard"
+  spec.add_development_dependency "coveralls"
 end
