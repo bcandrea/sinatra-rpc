@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/bcandrea/sinatra-rpc.png?branch=master)](https://travis-ci.org/bcandrea/sinatra-rpc)
 [![Coverage Status](https://coveralls.io/repos/bcandrea/sinatra-rpc/badge.png)](https://coveralls.io/r/bcandrea/sinatra-rpc)
 [![Gem Version](https://badge.fury.io/rb/sinatra-rpc.png)](http://badge.fury.io/rb/sinatra-rpc)
+[![Dependency Status](https://gemnasium.com/bcandrea/sinatra-rpc.png)](https://gemnasium.com/bcandrea/sinatra-rpc)
 
 # Sinatra::Rpc
 
