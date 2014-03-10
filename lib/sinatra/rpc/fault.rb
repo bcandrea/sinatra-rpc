@@ -30,6 +30,10 @@ module Sinatra
         class_name = "#{Sinatra::RPC::Utils.camelize fault_name}Fault"
         Sinatra::RPC.const_set(class_name, fault_class)
       end
+
+      # Register some generic fault codes (can be overridden)
+      register :generic, -1
+      register :bad_request, 100
     end
   end
 end

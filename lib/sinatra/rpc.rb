@@ -89,10 +89,6 @@ module Sinatra
     def self.registered(app)
       app.helpers Helpers
 
-      # Register some generic fault codes (can be overridden)
-      app.register_rpc_fault :generic, -1
-      app.register_rpc_fault :bad_request, 100
-
       # Register the introspection handler class
       app.add_rpc_handler 'system', Handler::Introspection.new(app)
     end
