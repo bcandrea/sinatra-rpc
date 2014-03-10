@@ -17,42 +17,50 @@ module HelpersTest
 
   class MyApp
     include Sinatra::RPC::Helpers
-    def self.get(key)
-      if key == :rpc_method_index
+  end
+end
+
+describe Sinatra::RPC::Helpers do
+
+  before(:each) do
+    @app = HelpersTest::MyApp.new
+  end
+
+  context '#select_serializer' do
+    it 'should generate the correct serializer instance' do
+      @app.select_serializer(nil).class.should == HelpersTest::Serializer2
+      @app.select_serializer('application/x-app2').class.should == HelpersTest::Serializer1
+    end
+  end
+
+  context '#call_rpc_method' do
+
+    before(:each) do
+      @app = HelpersTest::MyApp.new
+      @handler = HelpersTest::MyClass.new
+      @app.class.stub(:get) do
         {'myClass.myMethod' =>
           {
             method: :my_method,
-            handler: MyClass.new,
+            handler: @handler,
             help: '',
             signature: [['string', 'string']]
           }
         }
       end
     end
-  end
-end
 
-describe Sinatra::RPC::Helpers do
-
-  context '#select_serializer' do
-    it 'should generate the correct serializer instance' do
-      HelpersTest::MyApp.new.select_serializer(nil).class.should == HelpersTest::Serializer2
-      HelpersTest::MyApp.new.select_serializer('application/x-app2').class.should == HelpersTest::Serializer1
-    end
-  end
-
-  context '#call_rpc_method' do
     it 'should call the correct method' do
-      HelpersTest::MyApp.new.call_rpc_method('myClass.myMethod', 'some text').should == 'this is some text'
+      @app.call_rpc_method('myClass.myMethod', 'some text').should == 'this is some text'
     end
 
     it 'should raise a NotFound exception if the method does not exist' do
       expect { 
-        HelpersTest::MyApp.new.call_rpc_method 'myClass.someMethod', [42] 
+        @app.call_rpc_method 'myClass.someMethod', [42] 
       }.to raise_error(Sinatra::RPC::NotFound)
 
       expect { 
-        HelpersTest::MyApp.new.call_rpc_method 'anotherMethod', ['arg1', 'arg2'] 
+        @app.call_rpc_method 'anotherMethod', ['arg1', 'arg2'] 
       }.to raise_error(Sinatra::RPC::NotFound)
     end
   end

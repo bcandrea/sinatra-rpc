@@ -18,14 +18,11 @@ module Sinatra
   #     require "sinatra/base"
   #     require "sinatra/rpc"
   #     
-  #     class MyApp < Sinatra::Base
-  #       # Optional (this is the default value if none is set)
-  #       # This parameter MUST be set before registering the extension
-  #       set :rpc_path, '/RPC2'
-  #       
+  #     class MyApp < Sinatra::Base   
   #       register Sinatra::RPC
   #       
-  #       # Map custom error codes to Ruby exceptions
+  #       # Map custom error codes to Ruby exceptions: this will
+  #       # generate a class named SomeErrorFault
   #       register_rpc_fault :some_error, 399
   #       
   #       # Add a new sub-handler in the 'myHandler' namespace
@@ -37,11 +34,13 @@ module Sinatra
   #       # If the handler namespace is omitted, all the methods are added directly 
   #       # to the server (empty) namespace
   #       add_rpc_handler MyDefaultRPCHandler
+  #
+  #       # Define the RPC endpoint (it must be a POST request)
+  #       post '/RPC2' do
+  #         handle_rpc(request)
+  #       end
   #     end
   module RPC
-
-    # The default value for the RPC path is '/RPC2'.
-    DEFAULT_RPC_PATH = '/RPC2'
 
     # (see Fault.register)
     # @example
@@ -81,7 +80,6 @@ module Sinatra
       rpc_method_index.merge! Utils.rpc_methods namespace, handler
     end
 
-
     # A custom exception raised when a call is made to a non-existent handler or
     # method.
     class NotFound < RuntimeError; end
@@ -97,46 +95,6 @@ module Sinatra
 
       # Register the introspection handler class
       app.add_rpc_handler 'system', Handler::Introspection.new(app)
-
-      # Get the right value of the RPC path
-      rpc_path = (app.get(:rpc_path) or DEFAULT_RPC_PATH)
-      
-      # Handle all RPC POST requests.
-      app.post rpc_path do
-
-        # The request/response serializer can be XML-RPC (the default) 
-        # or any serializer implemented as a subclass of Sinatra::RPC::Serializer::Base.
-        # The serializer class is chosen by reading the 'Content-Type' header in the request.
-        serializer = select_serializer(request.env['CONTENT_TYPE'])
-
-        req = request.body.read
-
-        # An empty request is not acceptable in RPC.
-        if req.empty?
-          halt 400
-        end
-
-        # Generate the response.
-        resp = begin
-          # Parse the contents of the request.
-          method, arguments = serializer.parse req
-
-          # Execute the method call.
-          call_rpc_method(method, arguments)
-        rescue Sinatra::RPC::NotFound
-          halt 404
-        rescue Sinatra::RPC::Fault => ex
-          ex
-        rescue ArgumentError => ex
-          Sinatra::RPC::BadRequestFault.new(ex.message)
-        rescue Exception => ex
-          Sinatra::RPC::GenericFault.new("#{ex.class.name}: #{ex.message}")
-        end
- 
-        content_type(serializer.content_type, serializer.content_type_options)
-        serializer.dump(resp)
-
-      end
     end
   end
 end
