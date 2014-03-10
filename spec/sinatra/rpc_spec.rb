@@ -62,6 +62,12 @@ describe Sinatra::RPC do
 
     context 'with introspection' do
 
+      it 'should have an echo method' do
+        call('test.echo', 'a test string')
+        last_response.should be_ok
+        parse(last_response).should == 'a test string'
+      end
+
       it 'should list RPC methods' do
         call('system.listMethods')
         last_response.should be_ok
@@ -70,6 +76,7 @@ describe Sinatra::RPC do
           system.listMethods
           system.methodHelp
           system.methodSignature
+          test.echo
         }
       end
 

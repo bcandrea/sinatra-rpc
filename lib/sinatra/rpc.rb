@@ -1,6 +1,7 @@
 require "sinatra/rpc/version"
 require "sinatra/rpc/helpers"
 require "sinatra/rpc/fault"
+require "sinatra/rpc/handler/echo"
 require "sinatra/rpc/handler/introspection"
 
 module Sinatra
@@ -87,6 +88,9 @@ module Sinatra
 
       # Initialize the method index
       app.set(:rpc_method_index, {})
+
+      # Register the echo handler class
+      app.add_rpc_handler 'test', Handler::Echo
 
       # Register the introspection handler class
       app.add_rpc_handler 'system', Handler::Introspection.new(app)
