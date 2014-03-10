@@ -1,38 +1,42 @@
 require 'spec_helper'
 
-class MyClass
-  # This is a test method.
-  def my_method; end
+module UtilsTest
+  class MyClass
+    # This is a test method.
+    def my_method; end
 
-  # Full method doc for greet.
-  # @param folks [String] people to greet
-  # @return [String] the greeting
-  def greet(folks); "Hi, #{folks}!"; end
+    # Full method doc for greet.
+    # @param folks [String] people to greet
+    # @return [String] the greeting
+    def greet(folks); "Hi, #{folks}!"; end
 
-  # Partially documented.
-  # @param people [String] the people
-  def bye(people); "Bye, #{people}!"; end
+    # Partially documented.
+    # @param people [String] the people
+    def bye(people); "Bye, #{people}!"; end
 
-  # Partially documented.
-  # @return [String] the result
-  def so_long(people); "So long, #{people}!"; end
+    # Partially documented.
+    # @return [String] the result
+    def so_long(people); "So long, #{people}!"; end
 
-  # Multiple types.
-  # @param arg [String, Class] the arg
-  # @return [Array] the result
-  def multi(arg); ["The argument is #{arg}!"]; end  
-end
+    # Multiple types.
+    # @param arg [String, Class] the arg
+    # @return [Array] the result
+    def multi(arg); ["The argument is #{arg}!"]; end  
+  end
 
-class SimpleClass
-  # This is a test method.
-  def my_method; end
+  class SimpleClass
+    # This is a test method.
+    def my_method; end
+  end
+
 end
 
 def m(name)
-  MyClass.instance_method name
+  UtilsTest::MyClass.instance_method name
 end
 
 describe Sinatra::RPC::Utils do
+
   context '.camelize' do
     it 'should convert underscored strings' do
       Sinatra::RPC::Utils.camelize('my_test_string').should == 'MyTestString'
@@ -96,7 +100,7 @@ Full method doc for greet.
 
   context '.rpc_methods' do
     it 'should correctly generate the RPC method index' do
-      c = MyClass.new
+      c = UtilsTest::MyClass.new
       index = {
         'ns.myMethod' => {
           handler:   c, 
@@ -147,7 +151,7 @@ Multiple types.
     end
 
     it 'should work without specifying a namespace' do
-      c = SimpleClass.new
+      c = UtilsTest::SimpleClass.new
       index = {
         'myMethod' => {
           handler:   c, 
