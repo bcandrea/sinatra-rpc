@@ -1,13 +1,13 @@
-require 'sinatra/rpc/transport'
+require 'sinatra/rpc/serializer'
 module Sinatra
   module RPC
     # Some methods to include in the app class.
     module Helpers
       
-      # Generate a transport instance suitable for the incoming RPC request.
-      # (see Sinatra::RPC::Transport.find)
-      def select_transport(accept_header)
-        Sinatra::RPC::Transport.find(accept_header).new
+      # Generate a serializer instance suitable for the incoming RPC request.
+      # (see Sinatra::RPC::Serializer.find)
+      def select_serializer(content_type)
+        Sinatra::RPC::Serializer.find(content_type).new
       end
 
       # Execute an RPC method with the given name and arguments.

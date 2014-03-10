@@ -1,6 +1,6 @@
 module Sinatra
   module RPC
-    module Handlers
+    module Handler
       # The instrospection handler can be used to display metadata about the
       # RPC server. It adds the `listMethods`, `methodSignature` and `methodHelp` RPC methods to 
       # the `system` namespace.

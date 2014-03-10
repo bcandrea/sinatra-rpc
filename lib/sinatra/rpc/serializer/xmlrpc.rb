@@ -1,12 +1,12 @@
-require 'sinatra/rpc/transport/base'
+require 'sinatra/rpc/serializer/base'
 require 'xmlrpc/marshal'
 
 module Sinatra
   module RPC
-    module Transport
+    module Serializer
       # This class handles XML-RPC calls.
-      class XML < Base
-        content_types 'text/xml'
+      class XMLRPC < Base
+        content_types nil, 'text/xml'
 
         # The charset is set to UTF-8.
         # (see Base#content_type_options)

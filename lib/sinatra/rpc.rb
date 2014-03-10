@@ -1,7 +1,7 @@
 require "sinatra/rpc/version"
 require "sinatra/rpc/helpers"
 require "sinatra/rpc/fault"
-require "sinatra/rpc/handlers/introspection"
+require "sinatra/rpc/handler/introspection"
 
 module Sinatra
   # This extension provides the functionality of an RPC server. 
@@ -96,7 +96,7 @@ module Sinatra
       app.register_rpc_fault :bad_request, 100
 
       # Register the introspection handler class
-      app.add_rpc_handler 'system', Handlers::Introspection.new(app)
+      app.add_rpc_handler 'system', Handler::Introspection.new(app)
 
       # Get the right value of the RPC path
       rpc_path = (app.get(:rpc_path) or DEFAULT_RPC_PATH)
@@ -104,10 +104,10 @@ module Sinatra
       # Handle all RPC POST requests.
       app.post rpc_path do
 
-        # The transport can be XML-RPC (the default) or  any transport implemented as 
-        # a subclass of Sinatra::RPC::Transport.
-        # The transport class is chosen by reading the 'Accept' header in the request.
-        transport = select_transport(request.env['ACCEPT'])
+        # The request/response serializer can be XML-RPC (the default) 
+        # or any serializer implemented as a subclass of Sinatra::RPC::Serializer::Base.
+        # The serializer class is chosen by reading the 'Content-Type' header in the request.
+        serializer = select_serializer(request.env['CONTENT_TYPE'])
 
         req = request.body.read
 
@@ -119,7 +119,7 @@ module Sinatra
         # Generate the response.
         resp = begin
           # Parse the contents of the request.
-          method, arguments = transport.parse req
+          method, arguments = serializer.parse req
 
           # Execute the method call.
           call_rpc_method(method, arguments)
@@ -133,8 +133,8 @@ module Sinatra
           Sinatra::RPC::GenericFault.new("#{ex.class.name}: #{ex.message}")
         end
  
-        content_type(transport.content_type, transport.content_type_options)
-        transport.dump(resp)
+        content_type(serializer.content_type, serializer.content_type_options)
+        serializer.dump(resp)
 
       end
     end

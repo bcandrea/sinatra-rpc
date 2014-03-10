@@ -1,24 +1,27 @@
 module Sinatra
   module RPC
-    module Transport
-      # The base class for all Transport instances.
+    module Serializer
+      # The base class for all Serializer instances.
       class Base
 
         class << self
-          # Set the list of content types supported by the transport.
-          # @param content_types [*String] the list of supported content types.
+          attr_reader :response_content_type
+          
+          # Set the list of content types supported by this serializer.
+          # @param content_types [*String] the list of supported content types;
+          #   if set to `nil`, this serializer is used as a default in case the
+          #   content type is not specified in the request.
           def content_types(*content_types)
-            content_types.each do |c|
-              Sinatra::RPC::Transport.registry[c] = self
-            end
+            Sinatra::RPC::Serializer.register self, content_types
+            @response_content_type = content_types.compact.first
           end
         end
 
         # The content type that should be set in responses. By default
-        # it is the first from the list of types defined by the class.
+        # it is the first from the list of content types defined by the class.
         # @return [String] the content type to set in the response header.
         def content_type
-          self.class.content_types.first
+          self.class.response_content_type
         end
 
         # An hash of options to set with the response content type.
