@@ -1,6 +1,15 @@
 require 'spec_helper'
 
 describe Sinatra::RPC::Serializer::Base do
+
+  before(:all) do
+    @registry = Sinatra::RPC::Serializer.instance_variable_get('@registry').dup
+  end
+
+  after(:all) do
+    Sinatra::RPC::Serializer.instance_variable_set('@registry', @registry)
+  end
+
   it 'should set the correct response content type' do
     class B64Serializer < Sinatra::RPC::Serializer::Base
       content_types 'text/base64'

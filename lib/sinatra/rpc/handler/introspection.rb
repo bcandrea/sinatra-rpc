@@ -36,7 +36,7 @@ module Sinatra
         private
 
           def index
-            @app.get(:rpc_method_index)
+            @app.settings.rpc_method_index
           end
       end
     end

@@ -1,6 +1,15 @@
 require 'spec_helper'
 
 describe Sinatra::RPC::Serializer do
+
+  before(:all) do
+    @registry = Sinatra::RPC::Serializer.instance_variable_get('@registry').dup
+  end
+
+  after(:all) do
+    Sinatra::RPC::Serializer.instance_variable_set('@registry', @registry)
+  end
+
   it 'should allow registering new classes' do
     class B64Serializer < Sinatra::RPC::Serializer::Base
       content_types 'text/base64'

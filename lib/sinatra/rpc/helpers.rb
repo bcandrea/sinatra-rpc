@@ -16,7 +16,7 @@ module Sinatra
       # @param arguments [Array] the list of arguments
       # @return [Object] the return value of the method call on the target handler
       def call_rpc_method(method, arguments)
-        m = self.class.get(:rpc_method_index)[method]
+        m = settings.rpc_method_index[method]
         raise Sinatra::RPC::NotFound if m.nil?
         m[:handler].send m[:method], *arguments
       end
@@ -37,7 +37,7 @@ module Sinatra
         # or any serializer implemented as a subclass of Sinatra::RPC::Serializer::Base.
         # The serializer class is chosen by reading the 'Content-Type' header in the request.
         serializer = select_serializer(request.env['CONTENT_TYPE'])
-
+        
         body = request.body.read
 
         # An empty request is not acceptable in RPC.

@@ -49,7 +49,8 @@ Multiple types.
         signature: [['array', 'string']]
       },
     }
-    @app = double('app', get: index)
+    @settings = double('settings', rpc_method_index: index)
+    @app = double('app', settings: @settings)
     @intro = Sinatra::RPC::Handler::Introspection.new @app
   end
 

@@ -26,4 +26,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "yard"
   spec.add_development_dependency "coveralls"
   spec.add_development_dependency "rack-test"
+  spec.add_development_dependency "sinatra"
 end

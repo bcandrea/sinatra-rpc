@@ -1,26 +1,33 @@
 require 'spec_helper'
 
-module HelpersTest
-  class Serializer1 < Sinatra::RPC::Serializer::Base
-    content_types 'application/x-app1', 'application/x-app2'
-  end
+describe Sinatra::RPC::Helpers do
 
-  class Serializer2 < Sinatra::RPC::Serializer::Base
-    content_types nil, 'application/x-app3'
-  end
+  before(:all) do
+    @registry = Sinatra::RPC::Serializer.instance_variable_get('@registry').dup
+    module HelpersTest
+      class Serializer1 < Sinatra::RPC::Serializer::Base
+        content_types 'application/x-app1', 'application/x-app2'
+      end
 
-  class MyClass
-    def my_method(text)
-      "this is #{text}"
+      class Serializer2 < Sinatra::RPC::Serializer::Base
+        content_types nil, 'application/x-app3'
+      end
+
+      class MyClass
+        def my_method(text)
+          "this is #{text}"
+        end
+      end
+
+      class MyApp
+        include Sinatra::RPC::Helpers
+      end
     end
   end
 
-  class MyApp
-    include Sinatra::RPC::Helpers
+  after(:all) do
+    Sinatra::RPC::Serializer.instance_variable_set('@registry', @registry)
   end
-end
-
-describe Sinatra::RPC::Helpers do
 
   before(:each) do
     @app = HelpersTest::MyApp.new
@@ -38,16 +45,17 @@ describe Sinatra::RPC::Helpers do
     before(:each) do
       @app = HelpersTest::MyApp.new
       @handler = HelpersTest::MyClass.new
-      @app.class.stub(:get) do
-        {'myClass.myMethod' =>
-          {
+      @settings = double(:settings, 
+        rpc_method_index: {
+          'myClass.myMethod' => {
             method: :my_method,
             handler: @handler,
             help: '',
             signature: [['string', 'string']]
           }
         }
-      end
+      )
+      @app.stub(:settings) {@settings}
     end
 
     it 'should call the correct method' do

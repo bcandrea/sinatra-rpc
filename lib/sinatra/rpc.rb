@@ -73,11 +73,7 @@ module Sinatra
     #     end
     def add_rpc_handler(namespace = nil, handler)
       handler = handler.new if Class === handler
-      unless rpc_method_index = get(:rpc_method_index)
-        rpc_method_index = {}
-        set(:rpc_method_index, rpc_method_index)
-      end
-      rpc_method_index.merge! Utils.rpc_methods namespace, handler
+      settings.rpc_method_index.merge! Utils.rpc_methods namespace, handler
     end
 
     # A custom exception raised when a call is made to a non-existent handler or
@@ -88,6 +84,9 @@ module Sinatra
     # the default property values and register standard error codes and handlers.
     def self.registered(app)
       app.helpers Helpers
+
+      # Initialize the method index
+      app.set(:rpc_method_index, {})
 
       # Register the introspection handler class
       app.add_rpc_handler 'system', Handler::Introspection.new(app)
