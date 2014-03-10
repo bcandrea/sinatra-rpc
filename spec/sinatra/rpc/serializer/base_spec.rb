@@ -31,4 +31,20 @@ describe Sinatra::RPC::Serializer::Base do
     AnotherDefaultSerializer.new.content_type.should == 'application/x-another-default'
   end
 
+  it 'should set default content type options' do
+    class OptionsSerializer < Sinatra::RPC::Serializer::Base
+      content_types 'application/x-opt'
+    end
+    OptionsSerializer.new.content_type_options.should == {}
+  end
+
+  it 'should raise an exception if the dump or parse methods are not implemented' do
+    class DummySerializer < Sinatra::RPC::Serializer::Base
+      content_types 'application/x-no-parse'
+    end
+
+    expect { DummySerializer.new.dump(Object.new) }.to raise_error(NotImplementedError)
+    expect { DummySerializer.new.parse("request") }.to raise_error(NotImplementedError)
+  end
+
 end
