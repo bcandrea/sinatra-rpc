@@ -22,6 +22,4 @@ describe Sinatra::RPC::Serializer::Base do
     AnotherDefaultSerializer.new.content_type.should == 'application/x-another-default'
   end
 
-
-
 end
