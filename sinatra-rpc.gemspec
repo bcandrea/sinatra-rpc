@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Sinatra::RPC::VERSION
   spec.authors       = ["Andrea Bernardo Ciddio"]
   spec.email         = ["bcandrea@gmail.com"]
-  spec.description   = %q{A Sinatra module providing RPC server functionality}
-  spec.summary       = %q{This module provides Sinatra extension that can be used to build RPC endpoints.}
+  spec.description   = %q{A Sinatra extension module providing RPC server functionality}
+  spec.summary       = %q{The Sinatra::RPC module provides an extension that can be used to build RPC endpoints.}
   spec.homepage      = "https://github.com/bcandrea/sinatra-rpc"
   spec.license       = "MIT"
 
