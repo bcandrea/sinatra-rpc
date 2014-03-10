@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/bcandrea/sinatra-rpc.png?branch=master)](https://travis-ci.org/bcandrea/sinatra-rpc)
 [![Coverage Status](https://coveralls.io/repos/bcandrea/sinatra-rpc/badge.png)](https://coveralls.io/r/bcandrea/sinatra-rpc)
+[![Gem Version](https://badge.fury.io/rb/sinatra-rpc.png)](http://badge.fury.io/rb/sinatra-rpc)
 
 # Sinatra::Rpc
 
@@ -8,6 +9,8 @@ A simple [Sinatra extension module](http://www.sinatrarb.com/extensions.html) pr
 
 This module allows exposure of all the public methods of any object via RPC. The only supported serialization 
 method is [XML-RPC](http://wikipedia.org/wiki/XML-RPC) at the moment.
+
+The full API documentation is available [here](http://rubydoc.info/github/bcandrea/sinatra-rpc/master/frames).
 
 ## Installation
 
